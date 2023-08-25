@@ -1,0 +1,12 @@
+name: Test Runner
+on: 
+  workflow_dispatch:
+
+
+jobs:
+  run-test: 
+    runs-on: self-hosted
+    steps:
+    - name: Run command
+      run: echo world
+    
