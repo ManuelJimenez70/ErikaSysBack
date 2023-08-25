@@ -51,7 +51,7 @@ jobs:
     runs-on: prod
     steps:  
     - name: Download a build artifact
-      uses: actions/download-artifact@3.0.0
+      uses: actions/download-artifact@v3.0.0
       with:
         name: demo-app-back-build
         path: /var/www/ErikaBackSys
