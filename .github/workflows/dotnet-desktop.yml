@@ -57,7 +57,7 @@ jobs:
       #Wap_Project_Path: your-wap-project-path                   # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
 
     steps:
-
+    - uses: actions/checkout@v3
     # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
