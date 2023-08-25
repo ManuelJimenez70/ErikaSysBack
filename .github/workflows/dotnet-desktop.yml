@@ -46,6 +46,15 @@ on:
 
 jobs:
 
+  release:
+    needs: build    
+    runs-on: prod
+    steps:  
+    - name: Download a build artifact
+      uses: actions/download-artifact@3.0.0
+      with:
+        name: demo-app-back-build
+        path: /var/www/ErikaBackSys
   build:
     runs-on: ubuntu-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
@@ -79,15 +88,7 @@ jobs:
         name: demo-app-back-build
         path: app/build
         
-release:
-  needs: build    
-  run-on: prod
-  steps:  
-      - name: Download a build artifact
-        uses: actions/download-artifact@3.0.0
-        with:
-          name: demo-app-back-build
-          path: /var/www/ErikaBackSys
+
         
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     #- name: Setup MSBuild.exe
