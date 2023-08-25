@@ -36,7 +36,7 @@
 # For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
 # refer to https://github.com/microsoft/github-actions-for-desktop-apps
 
-name: DemoBack
+name: Build and Release DemoBack
 
 on:
   push:
@@ -72,7 +72,23 @@ jobs:
 
     - name: Publish
       run: dotnet publish -c Release -o app/build
-
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: demo-app-back-build
+        path: app/build
+        
+release:
+  needs: build    
+  run-on: prod
+  steps:  
+      - name: Download a build artifact
+        uses: actions/download-artifact@3.0.0
+        with:
+          name: demo-app-back-build
+          path: /var/www/ErikaBackSys
+        
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     #- name: Setup MSBuild.exe
      # uses: microsoft/setup-msbuild@v1.0.2
@@ -108,8 +124,10 @@ jobs:
      # run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: demo-app-back-build
-        path: app/build
+
+        
+
+      
+
+
+  
