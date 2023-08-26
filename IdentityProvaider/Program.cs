@@ -44,12 +44,12 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "ERKOrigins",
         configurePolicy: builder =>
         {
-            builder.AllowAnyOrigin() // Permite todas las direcciones
+            builder.SetIsOriginAllowed((host) => true) // Permite todas las direcciones sin credenciales
                    .AllowAnyHeader()
-                   .AllowAnyMethod()
-                   .AllowCredentials();
+                   .AllowAnyMethod();
         });
 });
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
