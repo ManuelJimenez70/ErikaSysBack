@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+    <PackageReference Include="System.Security.Permissions" Version="4.4.0" />
   </ItemGroup>
 
 </Project>
