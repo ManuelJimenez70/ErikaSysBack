@@ -18,6 +18,7 @@ namespace IdentityProvaider.Domain.Entities
         public Stock stock { get; set; }
         public CreationDate creationDate { get; set; }
         public State state { get; set; }
+        public IList<Action_Product> action_products { get; set; }
 
 
         public Product()

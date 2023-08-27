@@ -16,6 +16,7 @@ namespace IdentityProvaider.Domain.Entities
         public Description? description { get; private set; }
 
         public State state { get; private set; }
+        public IList<Action_Product> action_users { get; set; }
 
         public Action()
         {

@@ -3,17 +3,20 @@ using IdentityProvaider.API.Queries;
 using IdentityProvaider.Domain.Entities;
 using IdentityProvaider.Domain.Repositories;
 using IdentityProvaider.Domain.ValueObjects;
+using IdentityProvaider.Infraestructure;
 using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
+using Action = IdentityProvaider.Domain.Entities.Action;
 
 namespace IdentityProvaider.API.AplicationServices
 {
     public class ProductService
     {
         private readonly IProductRepository repository;
+
 
         public ProductService(IProductRepository repository)
         {

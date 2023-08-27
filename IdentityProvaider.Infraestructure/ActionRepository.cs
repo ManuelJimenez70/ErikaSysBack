@@ -25,25 +25,38 @@ namespace IdentityProvaider.Infraestructure
             await db.AddAsync(action);
             await db.SaveChangesAsync();
         }
+        public async Task RecordAction(Action_Product weak)
+        {
+            await db.AddAsync(weak);
+            await db.SaveChangesAsync();
+        }
 
         public async Task<Action> GetActionById(ActionId Id)
         {
             return await db.Actions.FindAsync((int)Id);
         }
 
-        public async Task<List<Action>> GetActionsByRangeDate(CreationDate dateI, DateTime dateF, ActionType type)
+        public async Task<List<Action_Product>> GetActionsByRangeDate(CreationDate dateI, DateTime dateF, ActionType type)
         {
-            List<Action> actionsInRange = await db.Actions
-                           .Where(action => action.creationDate.value.ToUniversalTime() >= dateI.value.ToUniversalTime() && action.creationDate.value.ToUniversalTime() <= dateF.ToUniversalTime() && action.type.value == type.value && action.state.value == "Activo")
+            List<Action_Product> actionsInRange = await db.Action_Product
+                           .Where(action => action.creationDate.value.ToUniversalTime() >= dateI.value.ToUniversalTime() && action.creationDate.value.ToUniversalTime() <= dateF.ToUniversalTime() && action.action.type.value == type.value)
                            .ToListAsync();
 
             return actionsInRange;
         }
 
-        public async Task<List<Action>> GetActionsByRangeDate(CreationDate dateI, DateTime dateF)
+        public async Task<List<Action_Product>> GetActionsByRangeDate(CreationDate dateI, DateTime dateF)
         {
-            List<Action> actionsInRange = db.Actions
-                   .Where(action => action.creationDate.value.ToUniversalTime() >= dateI.value.ToUniversalTime() && action.creationDate.value.ToUniversalTime() <= dateF.ToUniversalTime() && action.state.value == "Activo")
+            List<Action_Product> actionsInRange = db.Action_Product
+                   .Where(action => action.creationDate.value.ToUniversalTime() >= dateI.value.ToUniversalTime() && action.creationDate.value.ToUniversalTime() <= dateF.ToUniversalTime())
+                   .ToList();
+            return actionsInRange;
+        }
+
+        public async Task<List<Action_Product>> GetActionsByUserId(UserId id_user)
+        {
+            List<Action_Product> actionsInRange = db.Action_Product
+                   .Where(action => action.id_user == id_user.value)
                    .ToList();
             return actionsInRange;
         }

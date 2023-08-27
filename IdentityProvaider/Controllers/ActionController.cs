@@ -22,6 +22,13 @@ namespace IdentityProvaider.API.Controllers
             return Ok(createActionCommand);
         }
 
+        [HttpPost("RecordAction")]
+        public async Task<IActionResult> RecordAction(RecordSaleCommand recordSaleCommand)
+        {
+            await actionServices.HandleCommand(recordSaleCommand);
+            return Ok(recordSaleCommand);
+        }
+
         [HttpGet("getActionsByRangeDateType")]
         public async Task<IActionResult> GetActionsByRangeDate(DateTime dateI, DateTime dateF, string type)
         {
@@ -32,6 +39,12 @@ namespace IdentityProvaider.API.Controllers
         public async Task<IActionResult> GetActionsByRangeDate(DateTime dateI, DateTime dateF)
         {
             return Ok(await actionServices.GetActionsByRangeDate(dateI, dateF));
+        }
+
+        [HttpGet("getActionsByUserId")]
+        public async Task<IActionResult> GetActionsByUserId(int id_user)
+        {
+            return Ok(await actionServices.GetActionsByUserId(id_user));
         }
     }
 }
