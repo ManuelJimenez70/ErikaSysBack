@@ -68,10 +68,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     # Install the .NET Core workload
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.401
+    #- name: Install .NET Core
+     # uses: actions/setup-dotnet@v3
+      #with:
+       # dotnet-version: 6.0.401
         
     - name: Restore Dependencies
       run: dotnet restore
@@ -87,8 +87,6 @@ jobs:
       with:
         name: demo-app-back-build
         path: app/build
-        
-
         
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     #- name: Setup MSBuild.exe
