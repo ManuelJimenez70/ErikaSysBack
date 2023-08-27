@@ -22,6 +22,8 @@ namespace IdentityProvaider.Domain.Entities
         public Direction direction { get; private set; }
 
         public IList<Rol_User> rol_Users { get; set; }
+        public IList<Action_Product> action_users { get; set; }
+
         public static object Claims { get; set; }
 
         public User()

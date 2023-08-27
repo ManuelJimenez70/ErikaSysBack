@@ -16,6 +16,7 @@ namespace IdentityProvaider.Infraestructure
 
         public DbSet<Role> Roles { get; set; }
         public DbSet<LogUser> Log_Users { get; set; }
+        public DbSet<Action_Product> Action_Product { get; set; }
 
         public DbSet<Rol_User> Rol_User { get; set; }
         public DbSet<Password> SecurityPasswords { get; set; }
@@ -67,7 +68,7 @@ namespace IdentityProvaider.Infraestructure
             {
                 conf.Property(x => x.value).HasColumnName("name");
             });
-           
+
             modelBuilder.Entity<User>().OwnsOne(o => o.lastName, conf =>
             {
                 conf.Property(x => x.value).HasColumnName("last_name");
@@ -81,7 +82,7 @@ namespace IdentityProvaider.Infraestructure
             modelBuilder.Entity<User>().OwnsOne(o => o.identification, conf =>
             {
                 conf.Property(x => x.value).HasColumnName("document_number");
-            });           
+            });
 
             modelBuilder.Entity<User>().OwnsOne(o => o.creationDate, conf =>
             {
@@ -137,7 +138,7 @@ namespace IdentityProvaider.Infraestructure
             {
                 conf.Property(x => x.value).HasColumnName("id_edit_user");
             });
-   
+
             modelBuilder.Entity<LogUser>().OwnsOne(o => o.location, conf =>
             {
                 conf.Property(x => x.value).HasColumnName("location").IsRequired(false);
@@ -233,12 +234,13 @@ namespace IdentityProvaider.Infraestructure
             .Property(o => o.id_user).HasColumnName("id_user");
 
             modelBuilder.Entity<Rol_User>()
+       .Property(o => o.id_rol).HasColumnName("id_rol");
+
+            modelBuilder.Entity<Rol_User>()
                 .HasOne<Role>(sc => sc.role)
                 .WithMany(s => s.rol_Users)
                 .HasForeignKey(sc => sc.id_rol);
 
-            //modelBuilder.Entity<Rol_User>()
-            //.Property(o => o.id_user).HasColumnName("id_rol");
 
             modelBuilder.Entity<Rol_User>().OwnsOne(o => o.creationDate, conf =>
             {
@@ -249,6 +251,47 @@ namespace IdentityProvaider.Infraestructure
             {
                 conf.Property(x => x.value).HasColumnName("state_rol");
             });
+
+            //Ejemplo Entidad Debil
+
+            modelBuilder.Entity<Action_Product>().HasKey(sc => new { sc.id_user, sc.id_action, sc.id_product });
+
+            modelBuilder.Entity<Action_Product>().Property(o => o.id_action).HasColumnName("id_action");
+
+            modelBuilder.Entity<Action_Product>().Property(o => o.id_product).HasColumnName("id_product");
+
+            modelBuilder.Entity<Action_Product>().Property(o => o.id_user).HasColumnName("id_user");
+
+            modelBuilder.Entity<Action_Product>().OwnsOne(o => o.creationDate, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("creation_date");
+            });
+
+            modelBuilder.Entity<Action_Product>().OwnsOne(o => o.state, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("state");
+            });
+
+            modelBuilder.Entity<Action_Product>().OwnsOne(o => o.quantity, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("quantity");
+            });
+
+            modelBuilder.Entity<Action_Product>()
+                .HasOne<User>(sc => sc.user)
+                .WithMany(s => s.action_users)
+                .HasForeignKey(sc => sc.id_user);
+
+
+            modelBuilder.Entity<Action_Product>()
+                .HasOne<Action>(sc => sc.action)
+                .WithMany(s => s.action_users)
+                .HasForeignKey(sc => sc.id_action);
+
+            modelBuilder.Entity<Action_Product>()
+                .HasOne<Product>(sc => sc.product)
+                .WithMany(s => s.action_products)
+                .HasForeignKey(sc => sc.id_product);
 
             modelBuilder.Entity<Password>(o =>
             {

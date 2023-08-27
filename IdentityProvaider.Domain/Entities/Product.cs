@@ -15,7 +15,10 @@ namespace IdentityProvaider.Domain.Entities
         public Price price { get; set; }
         public Description description { get; set; }
         public ImageProduct image { get; set; }
-        public Rating rating { get; set; }
+        public Stock stock { get; set; }
+        public CreationDate creationDate { get; set; }
+        public State state { get; set; }
+        public IList<Action_Product> action_products { get; set; }
 
         public Product()
         {

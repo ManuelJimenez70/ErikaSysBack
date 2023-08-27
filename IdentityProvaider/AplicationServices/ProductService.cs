@@ -3,17 +3,20 @@ using IdentityProvaider.API.Queries;
 using IdentityProvaider.Domain.Entities;
 using IdentityProvaider.Domain.Repositories;
 using IdentityProvaider.Domain.ValueObjects;
+using IdentityProvaider.Infraestructure;
 using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
+using Action = IdentityProvaider.Domain.Entities.Action;
 
 namespace IdentityProvaider.API.AplicationServices
 {
     public class ProductService
     {
         private readonly IProductRepository repository;
+
 
         public ProductService(IProductRepository repository)
         {
@@ -22,41 +25,13 @@ namespace IdentityProvaider.API.AplicationServices
 
         public async Task<string> CreateProduct()
         {
-            Console.WriteLine("keeee");
-            Random random = new Random();
-            int randomIndex = random.Next(1, 31);
-            var apiUrl = "https://fakestoreapi.com/products/" + randomIndex;
-            using (var client = new HttpClient()) {
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(content);
-                    var p = JsonSerializer.Deserialize<TempProduct>(content);
-                    Console.WriteLine(p.title);
-                    Product product = new Product
-                    {
-                        title = ProductName.create(p.title),
-                        description = Description.create(p.description),
-                        image = ImageProduct.create(p.image),
-                        rating = Rating.create((int)random.Next(0, 11)),
-                        price = Price.create((int)(p.price * 10))
-                    };
-                   
-                    if (product != null)
-                    {
-                        await repository.AddProduct(product);
-                        return "Todo bien";
-                    }
-                    else {
-                        return await CreateProduct();
-                    }
-                  
-                }
-                else {
-                    return "Mal";
-                }
-            }
+            var product = new Product();
+            product.setTitle(ProductName.create(createProduct.title));
+            product.setDescription(Description.create(createProduct.description));
+            product.setImage(ImageProduct.create(createProduct.image));
+            product.setPrice(Price.create(createProduct.price));
+            product.setStock(Stock.create(createProduct.stock));
+            await repository.AddProduct(product);   
         }
 
         public async Task<List<Product>> GetProductsByNum(int numI, int numF)

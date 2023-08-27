@@ -57,6 +57,7 @@ namespace IdentityProvaider.API.AplicationServices
             }
             await repository.addRoles(listRol);
 
+
             var securityPassword = new Password(createUser.email);
             securityPassword.setPassword(Hash.create(createUser.password));
             await passwordRepository.AddPassword(securityPassword);
