@@ -1,5 +1,6 @@
-﻿using IdentityProvaider.Domain.Entities;
+using IdentityProvaider.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 using Action = IdentityProvaider.Domain.Entities.Action;
 
 namespace IdentityProvaider.Infraestructure
@@ -122,10 +123,17 @@ namespace IdentityProvaider.Infraestructure
             {
                 conf.Property(x => x.value).HasColumnName("price");
             });
-
-            modelBuilder.Entity<Product>().OwnsOne(o => o.rating, conf =>
+            modelBuilder.Entity<Product>().OwnsOne(o => o.creationDate, conf =>
             {
-                conf.Property(x => x.value).HasColumnName("rating");
+                conf.Property(x => x.value).HasColumnName("creation_date");
+            });
+            modelBuilder.Entity<Product>().OwnsOne(o => o.stock, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("stock");
+            });
+            modelBuilder.Entity<Product>().OwnsOne(o => o.state, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("state");
             });
 
             modelBuilder.Entity<LogUser>(o =>
