@@ -33,6 +33,7 @@ namespace IdentityProvaider.Domain.Entities
         public User(int id_user)
         {
             this.id_user = id_user;
+            state = State.create("Activo");
         }
 
         public void setEmail(Email email)

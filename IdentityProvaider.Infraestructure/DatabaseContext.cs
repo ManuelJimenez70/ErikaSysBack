@@ -1,6 +1,7 @@
-﻿using IdentityProvaider.Domain.Entities;
+using IdentityProvaider.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
+using Action = IdentityProvaider.Domain.Entities.Action;
 
 namespace IdentityProvaider.Infraestructure
 {
@@ -22,9 +23,37 @@ namespace IdentityProvaider.Infraestructure
 
         public DbSet<Session> InSession { get; set; }
 
+        public DbSet<Action> Actions { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {            
+        {
+            modelBuilder.Entity<Action>(o =>
+            {
+                o.HasKey(x => x.id_action).HasName("id_action");
+            });
+
+            modelBuilder.Entity<Action>().OwnsOne(o => o.type, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("type");
+            });
+
+            modelBuilder.Entity<Action>().OwnsOne(o => o.creationDate, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("creation_date");
+            });
+
+            modelBuilder.Entity<Action>().OwnsOne(o => o.description, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("description");
+            });
+
+            modelBuilder.Entity<Action>().OwnsOne(o => o.state, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("state");
+            });
+
             modelBuilder.Entity<User>(o =>
             {
                 o.HasKey(x => x.id_user).HasName("id_user");
