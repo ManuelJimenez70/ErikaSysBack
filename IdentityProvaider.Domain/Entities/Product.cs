@@ -20,14 +20,17 @@ namespace IdentityProvaider.Domain.Entities
         public State state { get; set; }
         public IList<Action_Product> action_products { get; set; }
 
+
         public Product()
         {
-
+            creationDate = CreationDate.create(DateTime.Now);
+            state = State.create("Activo");
         }
 
-        public Product(int id_user)
+        public Product(int id_product)
         {
-            this.id_product = id_user;
+            this.id_product = id_product;
+            
         }
 
         public void setTitle(ProductName title)
@@ -44,15 +47,17 @@ namespace IdentityProvaider.Domain.Entities
         {
             this.image = image;
         }
-
-        public void setRating(Rating rating)
-        {
-            this.rating = rating;
-        }
         public void setPrice(Price price)
         {
             this.price = price;
         }
-
+        public void setStock(Stock stock) 
+        {
+            this.stock = stock;
+        }
+        public void setState(State state) 
+        { 
+            this.state = state;
+        }
     }
 }

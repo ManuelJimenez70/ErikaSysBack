@@ -23,9 +23,10 @@ namespace IdentityProvaider.API.AplicationServices
             this.repository = repository;
         }
 
-        public async Task<string> CreateProduct()
+        public async Task CreateProduct(CreateProductCommand createProduct)
         {
             var product = new Product();
+            DateTime creationDate = DateTime.Now;
             product.setTitle(ProductName.create(createProduct.title));
             product.setDescription(Description.create(createProduct.description));
             product.setImage(ImageProduct.create(createProduct.image));
@@ -35,28 +36,9 @@ namespace IdentityProvaider.API.AplicationServices
         }
 
         public async Task<List<Product>> GetProductsByNum(int numI, int numF)
-           {
-               return await repository.GetProductsByNum(numI, numF);
-           }
-       
+        {
+            return await repository.GetProductsByNum(numI, numF);
+        }
 
-        
-    }
-
-    public class TempProduct
-    {
-        public int id { get; set; }
-        public string title { get; set; }
-        public double price { get; set; }
-        public string category { get; set; }
-        public string description { get; set; }
-        public string image { get; set; }
-        //public Ratingg rating { get; set; }
-    }
-
-    public class Ratingg
-    {
-        public double rate { get; set; }
-        public int count { get; set; }
     }
 }
