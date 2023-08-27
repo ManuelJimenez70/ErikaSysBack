@@ -70,6 +70,7 @@ namespace IdentityProvaider.API.Controllers
             await userServices.HandleCommand(createPerfilCommand);
             return Ok(createPerfilCommand);
         }
+
         [HttpGet("getUserById/{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
