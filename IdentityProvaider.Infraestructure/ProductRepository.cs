@@ -34,5 +34,11 @@ namespace IdentityProvaider.Infraestructure
             var products = db.Products.Skip(numI).Take((numF - numI)).ToList();
             return products;
         }
+
+        public async Task UpdateProduct(Product product)
+        {
+            db.Update(product);
+            db.SaveChanges();
+        }
     }
 }
