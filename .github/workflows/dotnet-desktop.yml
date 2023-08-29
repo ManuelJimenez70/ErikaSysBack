@@ -78,8 +78,8 @@ jobs:
     #sudo apt-get install ./docker-desktop-<version>-<arch>.deb
             
            
-    #- name: Launch Docker Desktop
-     # run: systemctl --user start docker-desktop
+    - name: Launch Docker Desktop
+      run: echo #systemctl --user start docker
       
     - name: Build the App Image From Source Code
       run: |
