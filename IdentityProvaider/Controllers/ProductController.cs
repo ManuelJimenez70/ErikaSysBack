@@ -14,17 +14,17 @@ namespace IdentityProvaider.API.Controllers
     public class ProductController : ControllerBase
     {
 
-        private readonly ProductService userServices;
+        private readonly ProductService productServices;
 
-        public ProductController(ProductService userServices)
+        public ProductController(ProductService productServices)
         {
-            this.userServices = userServices;
+            this.productServices = productServices;
         }
 
         [HttpPost("createProduct")]
         public async Task<IActionResult> CreateProduct(CreateProductCommand createProduct)
         {
-            await userServices.CreateProduct(createProduct);
+            await productServices.CreateProduct(createProduct);
             return Ok(createProduct);
         }
      
@@ -32,7 +32,31 @@ namespace IdentityProvaider.API.Controllers
         [HttpGet("getProductsByRange")]
         public async Task<IActionResult> GetUser(int numI, int numF)
         {
-            return Ok(await userServices.GetProductsByNum(numI, numF));
+            return Ok(await productServices.GetProductsByNum(numI, numF));
+        }
+        [HttpGet("getProductById/{id}")]
+        public async Task<IActionResult> GetUserById(int id) 
+        { 
+            var response = await productServices.GetProductById(id);
+            return Ok(response);
+        }
+
+        [HttpPost("updateProduct")]
+        public async Task<IActionResult> UpdateProduct(UpdateProductCommand updateProduct)
+        {
+            var product = new HttpClient();
+            HttpResponseMessage response = await product.GetAsync("https://api.myip.com");
+            MyIp myIp = new MyIp();
+            try
+            {
+                myIp = await response.Content.ReadFromJsonAsync<MyIp>();
+            }
+            catch (Exception ex)
+            { 
+                Console.WriteLine(ex.Message);
+            }
+            await productServices.UpdateProduct(updateProduct);
+            return Ok(updateProduct);
         }
 
         

@@ -10,7 +10,7 @@ namespace IdentityProvaider.Domain.Entities
 {
     public class Product
     {
-        public int id_product { get; init; }
+        public ProductId id_product { get; init; }
         public ProductName title { get; set; }
         public Price price { get; set; }
         public Description description { get; set; }
@@ -27,7 +27,7 @@ namespace IdentityProvaider.Domain.Entities
             state = State.create("Activo");
         }
 
-        public Product(int id_product)
+        public Product(ProductId id_product)
         {
             this.id_product = id_product;
             

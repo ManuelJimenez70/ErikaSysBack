@@ -14,5 +14,7 @@ namespace IdentityProvaider.Domain.Repositories
         Task<List<Product>> GetProductsByNum(int numI, int numF);
         Task<Product> GetProductById(ProductId Id);
 
+        Task UpdateProduct(Product product);
+
     }
 }
