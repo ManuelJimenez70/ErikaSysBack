@@ -32,12 +32,45 @@ namespace IdentityProvaider.API.AplicationServices
             product.setImage(ImageProduct.create(createProduct.image));
             product.setPrice(Price.create(createProduct.price));
             product.setStock(Stock.create(createProduct.stock));
-            await repository.AddProduct(product);   
+            await repository.AddProduct(product);
+        }
+
+        public async Task UpdateProduct(UpdateProductCommand updateProduct)
+        {
+            ProductId id = ProductId.create(updateProduct.id);
+            var product = await repository.GetProductById(id);
+            string title = string.IsNullOrEmpty(updateProduct.title) ? product.title.value : updateProduct.title;
+            product.setTitle(ProductName.create(title));
+            string description = string.IsNullOrEmpty(updateProduct.description) ? product.description.value : updateProduct.description;
+            product.setDescription(Description.create(description));
+            string image = string.IsNullOrEmpty(updateProduct.image) ? product.image.value : updateProduct.image;
+            product.setImage(ImageProduct.create(image));
+            int price;
+            if (updateProduct.price.HasValue)
+            {
+                price = updateProduct.price.Value;
+                product.setPrice(Price.create(price));
+            }
+            int stock;
+            if (updateProduct.stock.HasValue)
+            {
+                stock = updateProduct.stock.Value;
+                product.setStock(Stock.create(stock));
+            }
+            string state = string.IsNullOrEmpty(updateProduct.state) ? product.state.value : updateProduct.state;
+            product.setState(State.create(state));
+
+            await repository.UpdateProduct(product);
         }
 
         public async Task<List<Product>> GetProductsByNum(int numI, int numF)
         {
             return await repository.GetProductsByNum(numI, numF);
+        }
+
+        public async Task<Product> GetProductById(int id) 
+        {
+            return await repository.GetProductById(ProductId.create(id));
         }
 
     }

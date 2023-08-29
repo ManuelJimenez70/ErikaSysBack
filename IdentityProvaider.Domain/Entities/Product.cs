@@ -27,7 +27,7 @@ namespace IdentityProvaider.Domain.Entities
             state = State.create("Activo");
         }
 
-        public Product(int id_product)
+        public Product(ProductId id_product)
         {
             this.id_product = id_product;
             
