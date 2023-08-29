@@ -10,7 +10,7 @@ namespace IdentityProvaider.Domain.Entities
 {
     public class Product
     {
-        public ProductId id_product { get; init; }
+        public int id_product { get; init; }
         public ProductName title { get; set; }
         public Price price { get; set; }
         public Description description { get; set; }
