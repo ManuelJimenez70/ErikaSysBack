@@ -72,21 +72,26 @@ jobs:
 
     - name: Uninstall Docker Desktop for Linux
       run: sudo apt remove docker-desktop
+      
     - name: Complete cleanup
       run: | 
            rm -r $HOME/.docker/desktop
            sudo rm /usr/local/bin/com.docker.cli
            sudo apt purge docker-desktop
+           
     - name: Install Docker Desktop
       run: |
            sudo apt-get update
            sudo apt-get install ./docker-desktop-<version>-<arch>.deb
+           
     - name: Launch Docker Desktop
       run: systemctl --user start docker-desktop
+      
     - name: Build the App Image From Source Code
       run: |
             git clone https://github.com/paketo-buildpacks/samples \
             && cd samples/dotnet-core/aspnet
+            
     - name: Install CLI
       run: | 
             sudo add-apt-repository ppa:cncf-buildpacks/pack-cli
