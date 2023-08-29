@@ -61,16 +61,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Install gnome-terminal
       run: sudo apt install gnome-terminal
-      
-    - name: Uninstall Docker Desktop for Linux
-      run: sudo apt remove docker-desktop
-      
-    - name: Complete cleanup
-      run: | 
-           rm -r $HOME/.docker/desktop
-           sudo rm /usr/local/bin/com.docker.cli
-           sudo apt purge docker-desktop
-           
+          
     - name: Install Docker Desktop
       run: |
            sudo apt-get update
