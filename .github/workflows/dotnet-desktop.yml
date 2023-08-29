@@ -67,7 +67,35 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      #Install the .NET Core workload
+    - name: Install gnome-terminal
+      run: sudo apt install gnome-terminal
+
+    - name: Uninstall Docker Desktop for Linux
+      run: sudo apt remove docker-desktop
+    - name: Complete cleanup
+      run: | 
+           rm -r $HOME/.docker/desktop
+           sudo rm /usr/local/bin/com.docker.cli
+           sudo apt purge docker-desktop
+    - name: Install Docker Desktop
+      run: |
+           sudo apt-get update
+           sudo apt-get install ./docker-desktop-<version>-<arch>.deb
+    - name: Launch Docker Desktop
+      run: systemctl --user start docker-desktop
+    - name: Build the App Image From Source Code
+      run: |
+            git clone https://github.com/paketo-buildpacks/samples \
+            && cd samples/dotnet-core/aspnet
+    - name: Install CLI
+      run: | 
+            sudo add-apt-repository ppa:cncf-buildpacks/pack-cli
+            sudo apt-get update
+            sudo apt-get install pack-cli
+    - name: Run the app image with Docker
+      run: docker run -d -p 8080:8080 -e PORT=8080 paketo-demo-app
+      
+    #Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
