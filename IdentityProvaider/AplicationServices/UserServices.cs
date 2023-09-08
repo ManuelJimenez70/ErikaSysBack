@@ -5,6 +5,7 @@ using IdentityProvaider.Domain.Repositories;
 using IdentityProvaider.Domain.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
 using System.Net.Http;
@@ -46,7 +47,8 @@ namespace IdentityProvaider.API.AplicationServices
             user.setLastName(UserLastName.create(createUser.lastName));
             user.setTypeDocument(UserTypeDocument.create(createUser.typeDocument));
             user.setIdentification(UserIdentification.create(createUser.document_number));
-            user.setDirection(Direction.create(createUser.direction));        
+            user.setDirection(Direction.create(createUser.direction));
+            user.setState(State.create(string.IsNullOrEmpty(createUser.state) ? "Activo":createUser.state));
             await repository.AddUser(user);
 
 
@@ -137,9 +139,21 @@ namespace IdentityProvaider.API.AplicationServices
             return await passwordRepository.GetPasswordByHash(Hash.create(email));
         }
 
-        public async Task<User> GetUser(int userId)
+        public async Task<ContentResponse> GetUser(int userId)
         {
-            return await userQueries.GetUserIdAsync(userId);
+          try{
+                User user = await userQueries.GetUserIdAsync(userId);
+                ;
+                if (user != null)
+                {
+                    return ContentResponse.createResponse(true, " ", user);
+                }
+                return ContentResponse.createResponse(false, "USUARIO NO ENCONTRADO", null);
+            }
+            catch (Exception ex)
+            {
+                return ContentResponse.createResponse(false, "ERROR AL OBTENER USUARIO", ex.Message);
+            }
         }
 
 

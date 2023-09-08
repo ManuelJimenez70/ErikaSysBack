@@ -26,7 +26,11 @@ namespace IdentityProvaider.Domain.ValueObjects
             if (value == null)
             {
                 throw new ArgumentNullException("El valor no puede ser nulo");
-            }            
+            }
+            if (!(value.ToLower().Equals("activo") || value.ToLower().Equals("inactivo") || value.ToLower().Equals("pruebas")))
+            {
+                throw new ArgumentNullException("No existe ese tipo de estado. Ej: Inactivo, Activo");
+            }
             //agregar que el valor no puede ser mayor  a 50 caracteres
         }
     }

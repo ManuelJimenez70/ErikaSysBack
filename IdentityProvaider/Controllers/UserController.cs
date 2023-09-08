@@ -24,51 +24,20 @@ namespace IdentityProvaider.API.Controllers
         [HttpPost("createUser")]
         public async Task<IActionResult> AddUser(CreateUserCommand createPerfilCommand)
         {
-        //var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress;
-        // Get ip client
-        //string name = System.Net.Dns.GetHostName();
-        //string ip = System.Net.Dns.GetHostAddresses(name)[1].ToString();
-        //http://api.ipapi.com/2800:484:b387:b5f0:9099:91f6:255f:4d25?access_key=48565ca8121d0eb5414aca7a23549f61
-            var client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync("https://api.myip.com");
-            //InfoUser infoUser = null;
-            MyIp myIp = null;
-            if (response.IsSuccessStatusCode)
+            try
             {
-                try
-                {            
-                    myIp = await response.Content.ReadFromJsonAsync<MyIp>();
-                    string urlApi = "http://api.ipapi.com/";
-                    string paramsApi = "?access_key=48565ca8121d0eb5414aca7a23549f61";
-
-                    /*
-                    response = await client.GetAsync(urlApi + fe.ip + paramsApi);
-                    dynamic infoUser = new ExpandoObject();
-                     infoUser = await response.Content.ReadFromJsonAsync<dynamic>();
-                    //var info = await response.Content.ReadFromJsonAsync<InfoUser>();
-                    var user = await response.Content.ReadAsStringAsync();
-                    //JsonReader reader = new JsonTextReader(new StringReader(user));
-
-
-                    //JProperty p = (JProperty)JToken.ReadFrom(reader);                    
-                    //Assert.AreEqual("pie", p.Name);
-                    //Assert.AreEqual(true, (bool)p.Value);        
-                    Console.WriteLine("######");
-                    Console.WriteLine(infoUser.city);*/
-
-
-
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-
-            }                  
-            //string userIP = Request.UserHostAddress;
-            await userServices.HandleCommand(createPerfilCommand);
-            return Ok(createPerfilCommand);
+                await userServices.HandleCommand(createPerfilCommand);
+                return Ok(ContentResponse.createResponse(true, "USUARIO CREADO CORRECTAMENTE","SUCCED"));
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR AL CREAR USUARIO", "Ya existe el usuario con ese Id: " + ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR AL CREAR USUARIO", ex.Message));
+            }
+  
         }
 
         [HttpGet("getUserById/{id}")]

@@ -31,6 +31,10 @@ namespace IdentityProvaider.Domain.ValueObjects
             {
                 throw new ArgumentNullException("El valor no puede ser nulo");
             }
+            if (value.Length > 50)
+            {
+                throw new ArgumentNullException("El valor no puede ser mayor a 15 caracteres");
+            }
             //agregar que el valor no puede ser mayor  a 50 caracteres
         }
     }

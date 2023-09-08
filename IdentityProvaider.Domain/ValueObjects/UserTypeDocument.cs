@@ -35,7 +35,10 @@ namespace IdentityProvaider.Domain.ValueObjects
             {
                 throw new ArgumentNullException("El tipo de documento supera la longitud máxima");
             }
-            //agregar que el valor no puede ser mayor  a 50 caracteres
+            if (!(value.ToLower().Equals("cc") || value.ToLower().Equals("ti")))
+            {
+                throw new ArgumentNullException("No existe ese tipo de estado. Ej: Inactivo, Activo");
+            }
         }
     }
 }
