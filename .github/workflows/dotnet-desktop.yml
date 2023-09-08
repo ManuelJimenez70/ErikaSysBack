@@ -32,9 +32,6 @@
 # Finally, add the signing certificate password to the repo as a secret and name it "Pfx_Key".
 # See "Build the Windows Application Packaging project" below to see how the secret is used.
 #
-# For more information on GitHub Actions, refer to https://github.com/features/actions
-# For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
-# refer to https://github.com/microsoft/github-actions-for-desktop-apps
 name: Build and Release DemoBack
 
 on:
@@ -47,53 +44,25 @@ jobs:
 
   release:
     needs: build    
-    runs-on: prod
+    runs-on: netlify
     steps:  
     - name: Download a build artifact
       uses: actions/download-artifact@v3.0.0
       with:
         name: demo-app-back-build
         path: /var/www/ErikaBackSys
+    - name: Dirigirse a carpeta
+      run: | 
+            cd /var/www/ErikaBackSys/
+            ls -l
   build:
     runs-on: ubuntu-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
     steps:
     - uses: actions/checkout@v3
     - name: Install gnome-terminal
-      run: sudo apt install gnome-terminal
-          
-    - name: Install Docker Desktop
-      run: |
-           sudo apt-get update
-           sudo apt-get update
-           sudo apt-get install ca-certificates curl gnupg
-           sudo install -m 0755 -d /etc/apt/keyrings
-           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-           sudo chmod a+r /etc/apt/keyrings/docker.gpg
-           echo \ "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-           "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-           sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-           sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-           sudo docker run hello-world
-    #sudo apt-get install ./docker-desktop-<version>-<arch>.deb
-            
-           
-    - name: Launch Docker Desktop
-      run: echo #systemctl --user start docker
-      
-    - name: Build the App Image From Source Code
-      run: |
-            git clone https://github.com/paketo-buildpacks/samples \
-            && cd samples/dotnet-core/aspnet
-            
-    - name: Install CLI
-      run: | 
-            sudo add-apt-repository ppa:cncf-buildpacks/pack-cli
-            sudo apt-get update
-            sudo apt-get install pack-cli
-    - name: Run the app image with Docker
-      run: docker run -d -p 8080:8080 -e PORT=8080 paketo-demo-app
-      
+      run: sudo apt install gnome-terminal    
+    
     #Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
