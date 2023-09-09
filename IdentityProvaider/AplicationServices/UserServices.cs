@@ -48,7 +48,8 @@ namespace IdentityProvaider.API.AplicationServices
             user.setTypeDocument(UserTypeDocument.create(createUser.typeDocument));
             user.setIdentification(UserIdentification.create(createUser.document_number));
             user.setDirection(Direction.create(createUser.direction));
-            user.setState(State.create(string.IsNullOrEmpty(createUser.state) ? "Activo":createUser.state));
+            string state = string.IsNullOrEmpty(createUser.state) ? user.state.value : createUser.state;
+            user.setState(State.create(state));
             await repository.AddUser(user);
 
 
@@ -180,26 +181,33 @@ namespace IdentityProvaider.API.AplicationServices
 
         }
 
-        public async Task<string> HandleCommand(LoginCommand loginCommand)
-        {           
-            Password login = await passwordRepository.GetPasswordByHash(Hash.create(loginCommand.email));            
-            if (login != null)
+        public async Task<ContentResponse> HandleCommand(LoginCommand loginCommand)
+        {
+            try
             {
-                if (login.password.value.SequenceEqual(Hash.create(loginCommand.password).value))
+                Password login = await passwordRepository.GetPasswordByHash(Hash.create(loginCommand.email));
+                if (login != null)
                 {
-                    int id_user = await repository.GetIdUserByEmail(Email.create(loginCommand.email));
-                    if (id_user == 0)
+                    if (login.password.value.SequenceEqual(Hash.create(loginCommand.password).value))
                     {
-                        return "El usuario No se encuentra con estado Activo";
+                        int id_user = await repository.GetIdUserByEmail(Email.create(loginCommand.email));
+                        if (id_user == 0)
+                        {
+                            return ContentResponse.createResponse(false, "ERROR AL INICIAR SESION", "El usuario No se encuentra con estado Activo");
+                        }
+                        var session = new Session(UserId.create(id_user));
+                        await sessionRepository.AddSession(session);
+                        string[] roles = await userQueries.getRolesByIdUser(id_user);
+                        return ContentResponse.createResponse(true, "SUCCESS", generateToken(roles, loginCommand.email, id_user)); 
                     }
-                    var session = new Session(UserId.create(id_user));
-                    await sessionRepository.AddSession(session);
-                    string[] roles = await userQueries.getRolesByIdUser(id_user);
-                    return generateToken(roles, loginCommand.email, id_user);
-                }                        
-                return "Contraseña incorrecta";
-            }                       
-            return "Usuario no encontrado";
+                    return ContentResponse.createResponse(false, "ERROR AL INICIAR SESION", "Contraseña incorrecta");
+                }
+                return ContentResponse.createResponse(false, "ERROR AL INICIAR SESION", "Usuario no encontrado");
+            }
+            catch (Exception ex) {
+                return ContentResponse.createResponse(false, "ERROR AL INICIAR SESION", ex.Message);
+            }
+
         }
         private string generateToken(string[] roles, string email, int id_user)
         {

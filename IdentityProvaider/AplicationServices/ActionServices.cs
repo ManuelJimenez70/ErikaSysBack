@@ -23,7 +23,7 @@ namespace IdentityProvaider.API.AplicationServices
             this.actionRepository = actionRepository;
         }
 
-        public async Task HandleCommand(RecordSaleCommand recordSale)
+        public async Task<ContentResponse> HandleCommand(RecordSaleCommand recordSale)
         {
             try
             {
@@ -31,30 +31,56 @@ namespace IdentityProvaider.API.AplicationServices
                 DateTime creationDate = DateTime.Now;
                 weak.setCreationDate(CreationDate.create(creationDate));
                 User user = await userRepository.GetUserById(UserId.create(recordSale.id_user));
+                if (user == null)
+                {
+                    return ContentResponse.createResponse(false, "Error al generar Venta: no se encontro el usuario", "ERROR");
+                }
                 weak.setUser(user);
                 Action action = await actionRepository.GetActionById(ActionId.create(recordSale.id_action));
                 weak.setAction(action);
                 Product product = await repository.GetProductById(ProductId.create(recordSale.id_product));
-  
+                if (product == null) {
+                    return ContentResponse.createResponse(false, "Error al generar Venta: no se encontro el producto", "ERROR");
+                }
                 weak.setProduct(product);
                 weak.setQuantity(Quantity.create(recordSale.quantity));
-                weak.setState(State.create("SUCCESS"));
+                weak.setState(State.create(string.IsNullOrEmpty(recordSale.state) ? "SUCCESS" : recordSale.state));
+                if (action != null)
+                {
+                    if (action.type.value.ToUpper().Trim() == "IN")
+                    {
+                        product.setStock(Stock.create(product.stock.value + recordSale.quantity));
+                        await actionRepository.RecordAction(weak);
+                        return ContentResponse.createResponse(true, "Accion Registrada correctamente", "SUCCESS");
+                    }
+                    else if (action.type.value.ToUpper().Trim() == "OUT")
+                    {
+                        if ((product.stock.value - recordSale.quantity) < 0)
+                        {
+                            return ContentResponse.createResponse(false, "Error al generar Venta: No hay existencias suficientes para realizar la venta", "SUCCESS");
 
-                System.Console.WriteLine(action.type.value);
-                if (action.type.value.ToUpper().Trim() == "IN")
-                {
-                    product.setStock(Stock.create(product.stock.value + recordSale.quantity));
+                        }
+                        else
+                        {
+                            product.setStock(Stock.create(product.stock.value - recordSale.quantity));
+                            await actionRepository.RecordAction(weak);
+                            return ContentResponse.createResponse(true, "Venta Registrada correctamente", "SUCCESS");
+                        }
+                    }
+                    else
+                    {
+                        return ContentResponse.createResponse(false, "Error al generar Venta: Tipo de Accion no soportada", "ERROR");
+                    }
                 }
-                else if(action.type.value.ToUpper().Trim() == "OUT")
-                {
-                    product.setStock(Stock.create(product.stock.value - recordSale.quantity));
+                else {
+                    return ContentResponse.createResponse(false, "Error al generar Venta: Tipo de Accion no soportada", "ERROR");
                 }
-                await actionRepository.RecordAction(weak);
+
             }
             catch (Exception ex)
             {
 
-                throw new ArgumentNullException("Error al generar Venta acciones: " + ex.Message);
+                return ContentResponse.createResponse(false, "Error al generar Venta:" + ex.Message, "ERROR");
             }
 
         }

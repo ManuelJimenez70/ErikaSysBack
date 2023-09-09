@@ -27,7 +27,7 @@ namespace IdentityProvaider.API.Controllers
             try
             {
                 await userServices.HandleCommand(createPerfilCommand);
-                return Ok(ContentResponse.createResponse(true, "USUARIO CREADO CORRECTAMENTE","SUCCED"));
+                return Ok(ContentResponse.createResponse(true, "USUARIO CREADO CORRECTAMENTE","SUCCESS"));
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
             {

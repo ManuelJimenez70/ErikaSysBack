@@ -22,11 +22,12 @@ namespace IdentityProvaider.API.Controllers
             return Ok(createActionCommand);
         }
 
-        [HttpPost("RecordAction")]
+        [HttpPost("recordAction")]
         public async Task<IActionResult> RecordAction(RecordSaleCommand recordSaleCommand)
         {
-            await actionServices.HandleCommand(recordSaleCommand);
-            return Ok(recordSaleCommand);
+            var response = await actionServices.HandleCommand(recordSaleCommand);
+            return Ok(response);
+           
         }
 
         [HttpGet("getActionsByRangeDateType")]

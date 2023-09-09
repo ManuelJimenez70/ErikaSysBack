@@ -35,9 +35,9 @@ namespace IdentityProvaider.Domain.ValueObjects
             {
                 throw new ArgumentNullException("El tipo de documento supera la longitud máxima");
             }
-            if (!(value.ToLower().Equals("cc") || value.ToLower().Equals("ti")))
+            if (!value.ToLower().Equals("cc") && !value.ToLower().Equals("ti"))
             {
-                throw new ArgumentNullException("No existe ese tipo de estado. Ej: Inactivo, Activo");
+                throw new ArgumentNullException("No existe ese tipo de identificacion. Ej: CC, TI");
             }
         }
     }
