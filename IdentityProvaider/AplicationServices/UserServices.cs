@@ -79,7 +79,7 @@ namespace IdentityProvaider.API.AplicationServices
 
         }
 
-        public async Task HandleCommand(UpdateUserCommand updateUserCommand,string ip)
+        public async Task HandleCommand(UpdateUserCommand updateUserCommand)
         {
             //var user = new User(UserId.create(updateUserCommand.id));
             var user = await userQueries.GetUserIdAsync(updateUserCommand.id);

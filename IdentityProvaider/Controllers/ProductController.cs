@@ -24,39 +24,72 @@ namespace IdentityProvaider.API.Controllers
         [HttpPost("createProduct")]
         public async Task<IActionResult> CreateProduct(CreateProductCommand createProduct)
         {
-            await productServices.CreateProduct(createProduct);
-            return Ok(createProduct);
+
+            try
+            {
+                await productServices.CreateProduct(createProduct);
+
+                return Ok(ContentResponse.createResponse(true, "PRODUCTO CREADO CORRECTAMENTE", "SUCCESS"));
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR AL CREAR PRODUCTO", "Ya existe el PRODUCTO con ese Id: " + ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR AL CREAR PRODUCTO", ex.Message));
+            }
+           
         }
      
 
         [HttpGet("getProductsByRange")]
-        public async Task<IActionResult> GetUser(int numI, int numF)
+        public async Task<IActionResult> GetProducts(int numI, int numF)
         {
-            return Ok(await productServices.GetProductsByNum(numI, numF));
+
+            try
+            {
+                var products = await productServices.GetProductsByNum(numI, numF);
+
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", products));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
+
         }
         [HttpGet("getProductById/{id}")]
-        public async Task<IActionResult> GetUserById(int id) 
-        { 
-            var response = await productServices.GetProductById(id);
-            return Ok(response);
+        public async Task<IActionResult> GetProductById(int id) 
+        {
+            try
+            {
+                var response = await productServices.GetProductById(id);
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", response));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
         }
 
         [HttpPost("updateProduct")]
         public async Task<IActionResult> UpdateProduct(UpdateProductCommand updateProduct)
         {
-            var product = new HttpClient();
-            HttpResponseMessage response = await product.GetAsync("https://api.myip.com");
-            MyIp myIp = new MyIp();
+
             try
             {
-                myIp = await response.Content.ReadFromJsonAsync<MyIp>();
+                await productServices.UpdateProduct(updateProduct);
+                return Ok(ContentResponse.createResponse(true, "PRODUCTO ACTUALIZADO CORRECTAMENTE", "SUCCESS"));
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR AL ACTUALIZAR PRODUCTO", "Ya existe el PRODUCTO con ese Id: " + ex.Message));
             }
             catch (Exception ex)
-            { 
-                Console.WriteLine(ex.Message);
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR AL ACTUALIZAR PRODUCTO", ex.Message));
             }
-            await productServices.UpdateProduct(updateProduct);
-            return Ok(updateProduct);
         }
 
         

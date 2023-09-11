@@ -41,15 +41,11 @@ builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<IActionRepository, ActionRepository>();
 builder.Services.AddScoped<ActionServices>();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: "ERKOrigins",
-        configurePolicy: builder =>
-        {
-            builder.SetIsOriginAllowed((host) => true) // Permite todas las direcciones sin credenciales
-                   .AllowAnyHeader()
-                   .AllowAnyMethod();
-        });
+
+builder.Services.AddCors(options => {
+    options.AddPolicy(name: "ERKOrigins", policy => {
+        policy.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+    });
 });
 
 

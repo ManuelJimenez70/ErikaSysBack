@@ -1,5 +1,6 @@
 ﻿using IdentityProvaider.API.AplicationServices;
 using IdentityProvaider.API.Commands;
+using IdentityProvaider.Domain.ValueObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,65 +44,127 @@ namespace IdentityProvaider.API.Controllers
         [HttpGet("getUserById/{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
-            var response = await userServices.GetUser(id);
-            return Ok(response);
+
+            return Ok(await userServices.GetUser(id));
         }
 
         [HttpGet("getUsersByRange")]
         public async Task<IActionResult> GetUser(int numI, int numF, string state)
         {
-            return Ok(await userServices.GetUsersByNum(numI,numF, state));
+
+
+            try
+            {
+                var users = await userServices.GetUsersByNum(numI, numF, state);
+
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", users));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
         }
 
         [HttpPost("updateUser")]
         public async Task<IActionResult> UpdateUser(UpdateUserCommand updatePerfil)
         {
-            var client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync("https://api.myip.com");
-            MyIp myIp = null;
+
             try
             {
-                myIp = await response.Content.ReadFromJsonAsync<MyIp>();
+                await userServices.HandleCommand(updatePerfil);
+                return Ok(ContentResponse.createResponse(true, "USUARIO ACTUALIZADO CORRECTAMENTE", "SUCCESS"));
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR AL ACTUALIZAR USUARIO", "Ya existe el USUARIO con ese Id: " + ex.Message));
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                return Ok(ContentResponse.createResponse(false, "ERROR AL ACTUALIZAR USUARIO", ex.Message));
             }
-            await userServices.HandleCommand(updatePerfil, myIp.ip);
-            return Ok(updatePerfil);
+
+            
         }
 
 
         [HttpPost("updatePassword")]
         public async Task<IActionResult> UpdatePassword(UpdatePasswordCommand updatePassword)
-        {            
-            return Ok(await userServices.HandleCommand(updatePassword));
+        {
+            try
+            {
+                await userServices.HandleCommand(updatePassword);
+
+                return Ok(ContentResponse.createResponse(true, "CONTRASEÑA ACTUALIZADA CORRECTAMENTE", "SUCCESS"));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
+
         }        
 
         [HttpGet("getRolesByIdUser/{id}")]
         public async Task<IActionResult> getUser(int id)
         {
-            var response = await userServices.GetRolesByIdUser(id);
-            return Ok(response);
+
+            try
+            {
+                var response = await userServices.GetRolesByIdUser(id);
+
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", response));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
         }
 
         [HttpGet("getSessionByIdUser/{id}")]
         public async Task<IActionResult> getSession(int id)
         {
-            return Ok(await userServices.GetSessionsByIdUser(id));
+
+            try
+            {
+                var response = await userServices.GetSessionsByIdUser(id);
+
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", response));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
         }
 
         [HttpGet("getUsersInSession")]
         public async Task<IActionResult> getUserInSession()
         {
-            return Ok(await userServices.getUsersInSession());
+
+            try
+            {
+                var response = await userServices.getUsersInSession();
+
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", response));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
         }
 
 
         [HttpGet("getUsersInSession/{top}/{initTime}")]
         public async Task<IActionResult> getUserInSessionByParams(int top, DateTime initTime)
         {
-            return Ok(await userServices.getUsersInSessionByParams(top,initTime));
+            try
+            {
+                var response = await userServices.getUsersInSessionByParams(top, initTime);
+
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", response));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
         }
 
         [HttpPost("login")]
@@ -114,14 +177,19 @@ namespace IdentityProvaider.API.Controllers
         [HttpGet("getHistoryOfLogState")]
         public async Task<IActionResult> getHistoryOfLogState(int id_user)
         {
-            return Ok(await userServices.getHistoryOfLogState(id_user));
+
+            try
+            {
+                var response = await userServices.getHistoryOfLogState(id_user);
+
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", response));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
         }
     }
-    public class MyIp
-    {
-        public string ip { get; set; }
-        public string country { get; set; }
-        public string cc { get; set; }        
-    }
+    
 
 }
