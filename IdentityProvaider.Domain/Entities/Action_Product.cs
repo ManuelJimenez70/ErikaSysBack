@@ -15,6 +15,8 @@ namespace IdentityProvaider.Domain.Entities
         public Product? product { get; private set; }
         public int id_action { get; set; }
         public Action? action { get; private set; }
+        public int id_module { get; set; }
+        public Module? module { get; private set; }
         public CreationDate creationDate { get; private set; }
         public State state { get; private set; }
         public Quantity quantity { get; private set; }
@@ -24,11 +26,12 @@ namespace IdentityProvaider.Domain.Entities
             creationDate = CreationDate.create(DateTime.Now);
             state = State.create("QUEUE");
         }
-        public Action_Product(int id_user, int id_product, int id_action)
+        public Action_Product(int id_user, int id_product, int id_action, int id_module)
         {
             this.id_user = id_user;
             this.id_product = id_product;
             this.id_action = id_action;
+            this.id_module = id_module;
             creationDate = CreationDate.create(DateTime.Now);
             state = State.create("QUEUE");
         }
@@ -53,6 +56,10 @@ namespace IdentityProvaider.Domain.Entities
             this.action = action;
         }
 
+        public void setModule(Module module)
+        {
+            this.module = module;
+        }
 
         public void setCreationDate(CreationDate creationDate)
         {

@@ -39,10 +39,17 @@ namespace IdentityProvaider.API.AplicationServices
                 Action action = await actionRepository.GetActionById(ActionId.create(recordSale.id_action));
                 weak.setAction(action);
                 Product product = await repository.GetProductById(ProductId.create(recordSale.id_product));
-                if (product == null) {
+                if (product == null)
+                {
                     return ContentResponse.createResponse(false, "Error al generar Venta: no se encontro el producto", "ERROR");
                 }
                 weak.setProduct(product);
+                Module module = await actionRepository.GetModuleById(ModuleId.create(recordSale.id_module));
+                if (module == null)
+                {
+                    return ContentResponse.createResponse(false, "Error al generar Venta: no se encontro el Modulo", "ERROR");
+                }
+                weak.setModule(module);
                 weak.setQuantity(Quantity.create(recordSale.quantity));
                 weak.setState(State.create(string.IsNullOrEmpty(recordSale.state) ? "SUCCESS" : recordSale.state));
                 if (action != null)
@@ -72,7 +79,8 @@ namespace IdentityProvaider.API.AplicationServices
                         return ContentResponse.createResponse(false, "Error al generar Venta: Tipo de Accion no soportada", "ERROR");
                     }
                 }
-                else {
+                else
+                {
                     return ContentResponse.createResponse(false, "Error al generar Venta: Tipo de Accion no soportada", "ERROR");
                 }
 
@@ -120,6 +128,50 @@ namespace IdentityProvaider.API.AplicationServices
             try
             {
                 List<Action_Product> actions = await actionRepository.GetActionsByRangeDate(CreationDate.create(dateI), dateF, ActionType.create(type));
+                if (actions == null)
+                {
+                    throw new ArgumentNullException("No existen acciones en ese rango de tiempo");
+                }
+                return actions;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentNullException("Error al encontrar acciones: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrió un error al buscar acciones: " + ex.Message);
+            }
+
+        }
+
+        public async Task<List<Action_Product>> GetActionsByRangeDate(DateTime dateI, DateTime dateF, int moduleId, string type)
+        {
+            try
+            {
+                List<Action_Product> actions = await actionRepository.GetActionsByRangeDate(CreationDate.create(dateI), dateF, ModuleId.create(moduleId), ActionType.create(type));
+                if (actions == null)
+                {
+                    throw new ArgumentNullException("No existen acciones en ese rango de tiempo");
+                }
+                return actions;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentNullException("Error al encontrar acciones: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrió un error al buscar acciones: " + ex.Message);
+            }
+
+        }
+
+        public async Task<List<Action_Product>> GetActionsByRangeDate(DateTime dateI, DateTime dateF, int moduleId)
+        {
+            try
+            {
+                List<Action_Product> actions = await actionRepository.GetActionsByRangeDate(CreationDate.create(dateI), dateF, ModuleId.create(moduleId));
                 if (actions == null)
                 {
                     throw new ArgumentNullException("No existen acciones en ese rango de tiempo");

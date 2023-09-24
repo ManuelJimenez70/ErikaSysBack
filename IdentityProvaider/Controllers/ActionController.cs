@@ -36,6 +36,18 @@ namespace IdentityProvaider.API.Controllers
             return Ok(await actionServices.GetActionsByRangeDate(dateI, dateF, type));
         }
 
+        [HttpGet("getActionsByRangeDateModule")]
+        public async Task<IActionResult> GetActionsByRangeDate(DateTime dateI, DateTime dateF, int moduleId)
+        {
+            return Ok(await actionServices.GetActionsByRangeDate(dateI, dateF, moduleId));
+        }
+
+        [HttpGet("getActionsByRangeDateModuleType")]
+        public async Task<IActionResult> GetActionsByRangeDate(DateTime dateI, DateTime dateF, int moduleId, string type)
+        {
+            return Ok(await actionServices.GetActionsByRangeDate(dateI, dateF, moduleId, type));
+        }
+
         [HttpGet("getActionsByRangeDate")]
         public async Task<IActionResult> GetActionsByRangeDate(DateTime dateI, DateTime dateF)
         {

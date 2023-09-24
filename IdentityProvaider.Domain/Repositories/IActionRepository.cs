@@ -14,9 +14,12 @@ namespace IdentityProvaider.Domain.Repositories
         Task AddAction(Action action);
         Task<Action> GetActionById(ActionId Id);
         Task<List<Action_Product>> GetActionsByRangeDate(CreationDate dateI, DateTime dateF, ActionType type);
+        Task<List<Action_Product>> GetActionsByRangeDate(CreationDate dateI, DateTime dateF, ModuleId moduleId,ActionType type);
+        Task<List<Action_Product>> GetActionsByRangeDate(CreationDate dateI, DateTime dateF, ModuleId moduleId);
         Task<List<Action_Product>> GetActionsByRangeDate(CreationDate dateI, DateTime dateF);
         Task<List<Action_Product>> GetActionsByUserId(UserId id_user);
         Task UpdateActionStateById(ActionId Id, State state);
         Task RecordAction(Action_Product weak);
+        Task<Module> GetModuleById(ModuleId moduleId);
     }
 }

@@ -6,31 +6,33 @@ using System.Threading.Tasks;
 
 namespace IdentityProvaider.Domain.ValueObjects
 {
-    public record UserId
+    public record ModuleId
     {
         public int value { get; init; }
 
-        internal UserId(int value)
+        internal ModuleId(int value)
         {
             validate(value);
             this.value = value;
         }
 
-        public static UserId create(int value)
+        public static ModuleId create(int value)
         {
-            return new UserId(value);
+            return new ModuleId(value);
         }
 
-        public static implicit operator int(UserId userId)
+        public static implicit operator int(ModuleId moduleId)
         {
-            return userId.value;
+            return moduleId.value;
         }
         private static void validate(int value)
         {
             if (value <= 0)
             {
-                throw new ArgumentNullException("El valor del Id User tiene que ser mayor a cero");
+                throw new ArgumentNullException("El valor del Id Modulo tiene que ser mayor a cero");
             }
         }
+
+       
     }
 }

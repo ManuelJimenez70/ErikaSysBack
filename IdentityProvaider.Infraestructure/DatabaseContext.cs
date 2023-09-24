@@ -25,6 +25,8 @@ namespace IdentityProvaider.Infraestructure
         public DbSet<Session> InSession { get; set; }
 
         public DbSet<Action> Actions { get; set; }
+        public DbSet<Module> Modules { get; set; }
+
 
 
 
@@ -53,6 +55,22 @@ namespace IdentityProvaider.Infraestructure
             modelBuilder.Entity<Action>().OwnsOne(o => o.state, conf =>
             {
                 conf.Property(x => x.value).HasColumnName("state");
+            });
+
+
+            modelBuilder.Entity<Module>(o =>
+            {
+                o.HasKey(x => x.id_module).HasName("id_module");
+            });
+
+            modelBuilder.Entity<Module>().OwnsOne(o => o.name, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("name");
+            });
+
+            modelBuilder.Entity<Module>().OwnsOne(o => o.description, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("description");
             });
 
             modelBuilder.Entity<User>(o =>
@@ -262,13 +280,15 @@ namespace IdentityProvaider.Infraestructure
 
             //Ejemplo Entidad Debil
 
-            modelBuilder.Entity<Action_Product>().HasKey(sc => new { sc.id_user, sc.id_action, sc.id_product });
+            modelBuilder.Entity<Action_Product>().HasKey(sc => new { sc.id_user, sc.id_action, sc.id_product, sc.id_module });
 
             modelBuilder.Entity<Action_Product>().Property(o => o.id_action).HasColumnName("id_action");
 
             modelBuilder.Entity<Action_Product>().Property(o => o.id_product).HasColumnName("id_product");
 
             modelBuilder.Entity<Action_Product>().Property(o => o.id_user).HasColumnName("id_user");
+
+            modelBuilder.Entity<Action_Product>().Property(o => o.id_module).HasColumnName("id_module");
 
             modelBuilder.Entity<Action_Product>().OwnsOne(o => o.creationDate, conf =>
             {
@@ -295,6 +315,11 @@ namespace IdentityProvaider.Infraestructure
                 .HasOne<Action>(sc => sc.action)
                 .WithMany(s => s.action_users)
                 .HasForeignKey(sc => sc.id_action);
+
+            modelBuilder.Entity<Action_Product>()
+                .HasOne<Module>(sc => sc.module)
+                .WithMany(s => s.action_modules)
+                .HasForeignKey(sc => sc.id_module);
 
             modelBuilder.Entity<Action_Product>()
                 .HasOne<Product>(sc => sc.product)

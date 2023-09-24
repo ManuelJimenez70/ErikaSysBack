@@ -29,7 +29,7 @@ namespace IdentityProvaider.Domain.ValueObjects
         {
             if (value <= 0)
             {
-                throw new ArgumentNullException("El valor del Id tiene que ser mayor a cero");
+                throw new ArgumentNullException("El valor del Id Action tiene que ser mayor a cero");
             }
         }
     }
