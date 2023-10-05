@@ -40,5 +40,11 @@ namespace IdentityProvaider.Infraestructure
             db.Update(product);
             db.SaveChanges();
         }
+
+        public async Task<List<Product>> GetProductsByNum(int numI, int numF, State state)
+        {
+            var product = db.Products.Where(r => r.state.value.ToLower() == state.value.ToLower()).Skip(numI).Take((numF - numI)).ToList();
+            return product;
+        }
     }
 }

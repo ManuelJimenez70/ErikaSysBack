@@ -68,6 +68,11 @@ namespace IdentityProvaider.API.AplicationServices
             return await repository.GetProductsByNum(numI, numF);
         }
 
+        public async Task<List<Product>> GetProductsByNum(int numI, int numF, string state)
+        {
+            return await repository.GetProductsByNum(numI, numF, State.create(state));
+        }
+
         public async Task<Product> GetProductById(int id) 
         {
             return await repository.GetProductById(ProductId.create(id));

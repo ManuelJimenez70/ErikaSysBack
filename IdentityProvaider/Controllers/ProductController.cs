@@ -59,6 +59,24 @@ namespace IdentityProvaider.API.Controllers
             }
 
         }
+
+
+        [HttpGet("getProductsByRangeState")]
+        public async Task<IActionResult> GetProducts(int numI, int numF, string state)
+        {
+
+            try
+            {
+                var products = await productServices.GetProductsByNum(numI, numF, state);
+
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", products));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
+
+        }
         [HttpGet("getProductById/{id}")]
         public async Task<IActionResult> GetProductById(int id) 
         {
