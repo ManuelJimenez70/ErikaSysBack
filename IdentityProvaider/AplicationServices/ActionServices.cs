@@ -123,7 +123,7 @@ namespace IdentityProvaider.API.AplicationServices
             }
         }
 
-        public async Task<List<Action_Product>> GetActionsByRangeDate(DateTime dateI, DateTime dateF, string type)
+        public async Task<List<object>> GetActionsByRangeDate(DateTime dateI, DateTime dateF, string type)
         {
             try
             {
@@ -132,7 +132,30 @@ namespace IdentityProvaider.API.AplicationServices
                 {
                     throw new ArgumentNullException("No existen acciones en ese rango de tiempo");
                 }
-                return actions;
+
+                // Crear una nueva lista con las mismas acciones, pero con el atributo "moduleName" agregado
+                List<object> actionsWithModuleName = new List<object>();
+                foreach (Action_Product action in actions)
+                {
+                    Module module = await actionRepository.GetModuleById(ModuleId.create(action.id_module));
+                    string nameModule = module.name.value;
+
+                    var actionWithModuleName = new
+                    {
+                        id_user = action.id_user,
+                        id_product = action.id_product,
+                        id_action = action.id_action,
+                        id_module = action.id_module,
+                        creationDate = action.creationDate,
+                        quantity = action.quantity,
+                        // Copiar otros atributos aquí
+                        moduleName = nameModule // Agregar el atributo "moduleName"
+                    };
+
+                    actionsWithModuleName.Add(actionWithModuleName);
+                }
+
+                return actionsWithModuleName;
             }
             catch (ArgumentNullException ex)
             {
@@ -142,8 +165,8 @@ namespace IdentityProvaider.API.AplicationServices
             {
                 throw new Exception("Ocurrió un error al buscar acciones: " + ex.Message);
             }
-
         }
+
 
         public async Task<List<Action_Product>> GetActionsByRangeDate(DateTime dateI, DateTime dateF, int moduleId, string type)
         {
