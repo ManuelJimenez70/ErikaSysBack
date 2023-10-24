@@ -12,6 +12,9 @@ namespace IdentityProvaider.Domain.Repositories
     {
         Task AddProduct(Product product);
         Task<List<Product>> GetProductsByNum(int numI, int numF);
+
+        Task<List<Product>> GetProductsByModule(int numI, int numF, State? state, ModuleIdString id_module);
+
         Task<List<Product>> GetProductsByNum(int numI, int numF, State state);
 
         Task<Product> GetProductById(ProductId Id);

@@ -96,6 +96,12 @@ namespace IdentityProvaider.Infraestructure
             }
         }
 
-      
+        public async Task<List<Module>> GetModulesWithProducts()
+        {
+            List<Module> modules = db.Modules
+                   .Where(module => module.name.value != "Hotel")
+                   .ToList();
+            return modules;
+        }
     }
 }

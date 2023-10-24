@@ -18,6 +18,8 @@ namespace IdentityProvaider.Domain.Entities
         public Stock stock { get; set; }
         public CreationDate creationDate { get; set; }
         public State state { get; set; }
+        public ModuleIdString? id_module { get; set; }
+
         public IList<Action_Product> action_products { get; set; }
 
 
@@ -58,6 +60,10 @@ namespace IdentityProvaider.Domain.Entities
         public void setState(State state) 
         { 
             this.state = state;
+        }
+        public void setModule(ModuleIdString id_module)
+        {
+            this.id_module = id_module;
         }
     }
 }

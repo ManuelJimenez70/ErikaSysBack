@@ -32,6 +32,8 @@ namespace IdentityProvaider.API.AplicationServices
             product.setImage(ImageProduct.create(createProduct.image));
             product.setPrice(Price.create(createProduct.price));
             product.setStock(Stock.create(createProduct.stock));
+            string id_module = (createProduct.id_module != null? createProduct.id_module : null);
+            product.setModule(ModuleIdString.create(id_module));
             await repository.AddProduct(product);
         }
 
@@ -76,6 +78,11 @@ namespace IdentityProvaider.API.AplicationServices
         public async Task<Product> GetProductById(int id) 
         {
             return await repository.GetProductById(ProductId.create(id));
+        }
+
+        public async Task<List<Product>> GetProductByModule(int numI, int numF, string? state, string id_module)
+        {
+            return await repository.GetProductsByModule(numI, numF, state != null ? State.create(state) : null, ModuleIdString.create(id_module));
         }
 
     }

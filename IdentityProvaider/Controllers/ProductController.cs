@@ -77,6 +77,24 @@ namespace IdentityProvaider.API.Controllers
             }
 
         }
+
+        [HttpGet("getProductByModule")]
+        public async Task<IActionResult> GetProductByModule(int numI, int numF, string? state, string id_module)
+        {
+
+            try
+            {
+                var products = await productServices.GetProductByModule(numI, numF, state, id_module);
+
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", products));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
+
+        }
+
         [HttpGet("getProductById/{id}")]
         public async Task<IActionResult> GetProductById(int id) 
         {

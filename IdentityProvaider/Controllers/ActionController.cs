@@ -59,5 +59,23 @@ namespace IdentityProvaider.API.Controllers
         {
             return Ok(await actionServices.GetActionsByUserId(id_user));
         }
+
+
+        [HttpGet("getModulesWithProducts")]
+        public async Task<IActionResult> GetModulesWithProducts()
+        {
+            try
+            {
+                var response = await actionServices.GetModulesWithProducts();
+                return Ok(ContentResponse.createResponse(true, "SUCCESS", response));
+            }
+            catch (Exception ex)
+            {
+                return Ok(ContentResponse.createResponse(false, "ERROR", ex.Message));
+            }
+        }
+
+        
+        
     }
 }

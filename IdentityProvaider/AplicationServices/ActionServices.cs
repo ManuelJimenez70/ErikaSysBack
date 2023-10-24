@@ -234,5 +234,28 @@ namespace IdentityProvaider.API.AplicationServices
 
         }
 
+        public async Task<List<Module>> GetModulesWithProducts()
+        {
+            try
+            {
+                List<Module> modules = await actionRepository.GetModulesWithProducts();
+                if (modules == null)
+                {
+                    throw new ArgumentNullException("Error al encontrar modulos");
+                }
+
+                return modules;
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentNullException("Error al encontrar modulos: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al encontrar modulos: " + ex.Message);
+            }
+
+        }
+
     }
 }

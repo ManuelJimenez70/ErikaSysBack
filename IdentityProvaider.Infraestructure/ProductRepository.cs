@@ -43,8 +43,15 @@ namespace IdentityProvaider.Infraestructure
 
         public async Task<List<Product>> GetProductsByNum(int numI, int numF, State state)
         {
-            var product = db.Products.Where(r => r.state.value.ToLower() == state.value.ToLower()).Skip(numI).Take((numF - numI)).ToList();
-            return product;
+            var products = db.Products.Where(r => r.state.value.ToLower() == state.value.ToLower()).Skip(numI).Take((numF - numI)).ToList();
+            return products;
+        }
+
+        public async Task<List<Product>> GetProductsByModule(int numI, int numF, State? state, ModuleIdString id_module)
+        {
+            var products = state!=null? db.Products.Where(r => r.state.value.ToLower() == state.value.ToLower() && r.id_module.value == null || r.id_module.value == id_module.value).Skip(numI).Take((numF - numI)).ToList():
+                db.Products.Where(r => r.id_module.value == id_module.value  || r.id_module.value == null).Skip(numI).Take((numF - numI)).ToList();
+            return products;
         }
     }
 }

@@ -155,6 +155,11 @@ namespace IdentityProvaider.Infraestructure
                 conf.Property(x => x.value).HasColumnName("state");
             });
 
+            modelBuilder.Entity<Product>().OwnsOne(o => o.id_module, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("id_module").IsRequired(false);
+            });
+
             modelBuilder.Entity<LogUser>(o =>
             {
                 o.HasKey(x => x.id_log).HasName("id_log");

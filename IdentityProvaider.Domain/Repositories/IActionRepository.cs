@@ -21,5 +21,8 @@ namespace IdentityProvaider.Domain.Repositories
         Task UpdateActionStateById(ActionId Id, State state);
         Task RecordAction(Action_Product weak);
         Task<Module> GetModuleById(ModuleId moduleId);
+
+        Task<List<Module>> GetModulesWithProducts();
+
     }
 }
