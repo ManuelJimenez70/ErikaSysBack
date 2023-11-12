@@ -61,7 +61,8 @@ namespace IdentityProvaider.API.AplicationServices
             }
             string state = string.IsNullOrEmpty(updateProduct.state) ? product.state.value : updateProduct.state;
             product.setState(State.create(state));
-
+            string id_module = string.IsNullOrEmpty(updateProduct.id_module) ? product.id_module.value : updateProduct.id_module;
+            product.setModule(ModuleIdString.create(id_module));
             await repository.UpdateProduct(product);
         }
 

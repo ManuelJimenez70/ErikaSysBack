@@ -1,6 +1,7 @@
 ﻿using IdentityProvaider.API.AplicationServices;
 using IdentityProvaider.API.Commands;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace IdentityProvaider.API.Controllers
 {
@@ -30,18 +31,31 @@ namespace IdentityProvaider.API.Controllers
            
         }
 
+
+        [HttpPost("recordActionExamples")]
+        public async Task<IActionResult> RecordActionExamples()
+        {
+            Random random = new Random();
+            try
+            {
+                var response = await actionServices.HandleCommand(new RecordSaleCommand(random.Next(101), random.Next(1, 3), random.Next(1, 64), random.Next(1, 4), random.Next(1, 11), "pruebas", DateTime.Now.AddDays(-random.Next(1, 60))));
+                return Ok(response);
+            }
+            catch(Exception) {
+                return Ok(RecordActionExamples());
+            }
+        
+        }
         [HttpGet("getActionsByRangeDateType")]
         public async Task<IActionResult> GetActionsByRangeDate(DateTime dateI, DateTime dateF, string type)
         {
             return Ok(await actionServices.GetActionsByRangeDate(dateI, dateF, type));
         }
-
         [HttpGet("getActionsByRangeDateModule")]
         public async Task<IActionResult> GetActionsByRangeDate(DateTime dateI, DateTime dateF, int moduleId)
         {
             return Ok(await actionServices.GetActionsByRangeDate(dateI, dateF, moduleId));
         }
-
         [HttpGet("getActionsByRangeDateModuleType")]
         public async Task<IActionResult> GetActionsByRangeDate(DateTime dateI, DateTime dateF, int moduleId, string type)
         {

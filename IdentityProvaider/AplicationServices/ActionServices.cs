@@ -4,6 +4,7 @@ using IdentityProvaider.Domain.Entities;
 using IdentityProvaider.Domain.Repositories;
 using IdentityProvaider.Domain.ValueObjects;
 using IdentityProvaider.Infraestructure;
+using Newtonsoft.Json.Linq;
 using Action = IdentityProvaider.Domain.Entities.Action;
 
 namespace IdentityProvaider.API.AplicationServices
@@ -22,6 +23,7 @@ namespace IdentityProvaider.API.AplicationServices
             this.userRepository = userRepository;
             this.actionRepository = actionRepository;
         }
+
 
         public async Task<ContentResponse> HandleCommand(RecordSaleCommand recordSale)
         {
@@ -48,6 +50,9 @@ namespace IdentityProvaider.API.AplicationServices
                 if (module == null)
                 {
                     return ContentResponse.createResponse(false, "Error al generar Venta: no se encontro el Modulo", "ERROR");
+                }
+                if (recordSale.date != null) {
+                    weak.setCreationDate(CreationDate.create((DateTime)recordSale.date));
                 }
                 weak.setModule(module);
                 weak.setQuantity(Quantity.create(recordSale.quantity));
@@ -256,6 +261,8 @@ namespace IdentityProvaider.API.AplicationServices
             }
 
         }
+
+       
 
     }
 }
