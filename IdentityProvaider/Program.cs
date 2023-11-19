@@ -41,6 +41,9 @@ builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<IActionRepository, ActionRepository>();
 builder.Services.AddScoped<ActionServices>();
 
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<RoomServices>();
+
 
 builder.Services.AddCors(options => {
     options.AddPolicy(name: "ERKOrigins", policy => {

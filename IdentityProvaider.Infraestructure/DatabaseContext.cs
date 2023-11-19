@@ -26,12 +26,143 @@ namespace IdentityProvaider.Infraestructure
 
         public DbSet<Action> Actions { get; set; }
         public DbSet<Module> Modules { get; set; }
-
-
-
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<Check> Checks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+        
+
+            modelBuilder.Entity<Room>(o =>
+            {
+                o.HasKey(x => x.id_room).HasName("id_room");
+            });
+
+            modelBuilder.Entity<Room>().OwnsOne(o => o.number, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("number");
+            });
+
+            modelBuilder.Entity<Room>().OwnsOne(o => o.max_capacity, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("max_capacity");
+            });
+
+            modelBuilder.Entity<Room>().OwnsOne(o => o.price_per_night, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("price_per_night");
+            });
+
+            modelBuilder.Entity<Room>().OwnsOne(o => o.state, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("state");
+            });
+
+            modelBuilder.Entity<Check>(o =>
+            {
+                o.HasKey(x => x.id_check).HasName("id_check");
+            });
+
+            modelBuilder.Entity<Check>().OwnsOne(o => o.id_room, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("id_room");
+            });
+
+            modelBuilder.Entity<Check>().OwnsOne(o => o.id_reservation, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("id_reservation");
+            });
+
+            modelBuilder.Entity<Check>().OwnsOne(o => o.state, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("state");
+            });
+
+
+            modelBuilder.Entity<Check>().OwnsOne(o => o.checkin_date, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("checkin_date");
+            });
+
+            modelBuilder.Entity<Check>().OwnsOne(o => o.checkout_date, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("checkout_date");
+            });
+
+            modelBuilder.Entity<Check>().OwnsOne(o => o.titular_person_id, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("titular_person_id");
+            });
+
+            modelBuilder.Entity<Check>().OwnsOne(o => o.titular_person_name, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("titular_person_name");
+            });
+
+            modelBuilder.Entity<Check>().OwnsOne(o => o.num_hosts, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("num_hosts");
+            });
+
+            modelBuilder.Entity<Inventory>().HasKey(sc => new { sc.id_product, sc.id_room });
+
+            modelBuilder.Entity<Inventory>().Property(o => o.id_room).HasColumnName("id_room");
+
+            modelBuilder.Entity<Inventory>().Property(o => o.id_product).HasColumnName("id_product");
+
+            modelBuilder.Entity<Inventory>()
+            .HasOne<Room>(sc => sc.room)
+            .WithMany(s => s.room_products)
+            .HasForeignKey(sc => sc.id_room);
+
+            modelBuilder.Entity<Inventory>()
+                .HasOne<Product>(sc => sc.product)
+                .WithMany(s => s.room_products)
+                .HasForeignKey(sc => sc.id_product);
+
+            modelBuilder.Entity<Inventory>().OwnsOne(o => o.stock, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("stock");
+            });
+
+            modelBuilder.Entity<Reservation>(o =>
+            {
+                o.HasKey(x => x.id_reservation).HasName("id_reservation");
+            });
+
+            modelBuilder.Entity<Reservation>().OwnsOne(o => o.id_room, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("room_id");
+            });
+
+            modelBuilder.Entity<Reservation>().OwnsOne(o => o.reservation_date, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("reservation_date");
+            });
+
+            modelBuilder.Entity<Reservation>().OwnsOne(o => o.state, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("state");
+            });
+
+            modelBuilder.Entity<Reservation>().OwnsOne(o => o.titular_person_id, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("titular_person_id");
+            });
+
+            modelBuilder.Entity<Reservation>().OwnsOne(o => o.titular_person_name, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("titular_person_name");
+            });
+
+            modelBuilder.Entity<Reservation>().OwnsOne(o => o.creation_date, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("creation_date");
+            });
+
             modelBuilder.Entity<Action>(o =>
             {
                 o.HasKey(x => x.id_action).HasName("id_action");

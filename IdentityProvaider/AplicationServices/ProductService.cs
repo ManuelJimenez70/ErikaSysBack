@@ -26,7 +26,6 @@ namespace IdentityProvaider.API.AplicationServices
         public async Task CreateProduct(CreateProductCommand createProduct)
         {
             var product = new Product();
-            DateTime creationDate = DateTime.Now;
             product.setTitle(ProductName.create(createProduct.title));
             product.setDescription(Description.create(createProduct.description));
             product.setImage(ImageProduct.create(createProduct.image));

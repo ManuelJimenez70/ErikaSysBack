@@ -21,6 +21,8 @@ namespace IdentityProvaider.Domain.Entities
         public ModuleIdString? id_module { get; set; }
 
         public IList<Action_Product> action_products { get; set; }
+        public IList<Inventory> room_products { get; set; }
+
 
 
         public Product()
