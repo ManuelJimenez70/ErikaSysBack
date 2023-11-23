@@ -17,6 +17,8 @@ namespace IdentityProvaider.Domain.Repositories
 
         Task<Reservation> GetReservationById(ReservationId Id);
         Task<List<Reservation>> GetReservationsByNum(int numI, int numF, State state);
+        Task<List<Reservation>> GetAvalibleReservationsOfRoom(RoomId room);
+
         Task AddReservation(Reservation reservation);
         Task UpdateReservation(Reservation reservation);
 

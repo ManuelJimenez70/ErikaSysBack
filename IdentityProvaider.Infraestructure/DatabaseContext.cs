@@ -14,16 +14,12 @@ namespace IdentityProvaider.Infraestructure
 
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
-
         public DbSet<Role> Roles { get; set; }
         public DbSet<LogUser> Log_Users { get; set; }
         public DbSet<Action_Product> Action_Product { get; set; }
-
         public DbSet<Rol_User> Rol_User { get; set; }
         public DbSet<Password> SecurityPasswords { get; set; }
-
         public DbSet<Session> InSession { get; set; }
-
         public DbSet<Action> Actions { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<Room> Rooms { get; set; }
@@ -105,6 +101,11 @@ namespace IdentityProvaider.Infraestructure
             modelBuilder.Entity<Check>().OwnsOne(o => o.num_hosts, conf =>
             {
                 conf.Property(x => x.value).HasColumnName("num_hosts");
+            });
+
+            modelBuilder.Entity<Check>().OwnsOne(o => o.total, conf =>
+            {
+                conf.Property(x => x.value).HasColumnName("total");
             });
 
             modelBuilder.Entity<Inventory>().HasKey(sc => new { sc.id_product, sc.id_room });

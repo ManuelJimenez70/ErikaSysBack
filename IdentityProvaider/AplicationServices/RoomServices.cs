@@ -93,6 +93,13 @@ namespace IdentityProvaider.API.AplicationServices
                     return ContentResponse.createResponse(false, "ERROR AL CREAR RESERVACIÓN", "Habitación inexistente");
                 }
                 reservation.setReservationDate(ReservationDate.create(createReservation.reservation_date));
+                List<Reservation> reservations = await repository.GetAvalibleReservationsOfRoom(RoomId.create(room.id_room));
+                foreach (var reserv in reservations)
+                {
+                    if (reserv.reservation_date.value.ToShortDateString().Equals(reservation.reservation_date.value.ToShortDateString())) {
+                        return ContentResponse.createResponse(false, "ERROR AL CREAR RESERVACIÓN", "Ya existe una reservación para esa habitación en esa fecha.");
+                    }
+                }
                 reservation.setUserName(UserName.create(createReservation.titular_person_name));
                 reservation.setUserId(UserIdentification.create(createReservation.titular_person_id));
                 await repository.AddReservation(reservation);
@@ -246,6 +253,26 @@ namespace IdentityProvaider.API.AplicationServices
                 if (updateCheckCommand.num_hosts.HasValue)
                 {
                     check.setNumHosts(Quantity.create((int)updateCheckCommand.num_hosts));
+                }
+                if (updateCheckCommand.checkout_date.HasValue)
+                {
+                    check.setCheckOutDate(CheckOutDate.create((DateTime)updateCheckCommand.checkout_date));
+                }
+                if (updateCheckCommand.productsTotal.HasValue && check.checkout_date!=null)
+                {
+                    Room room = await repository.GetRoomById(check.id_room);
+                    int nights = (updateCheckCommand.checkout_date.Value - check.checkin_date.value).Days;
+                    if (nights >= 0)
+                    {
+                        // Calcular el total considerando noches de hospedaje y productos consumidos
+                        int total = (nights * room.price_per_night) + (updateCheckCommand.productsTotal ?? 0);
+                        // Establecer el total en el check
+                        check.setTotal(Price.create(total));
+                    }
+                    else
+                    {
+                        return ContentResponse.createResponse(false, "ERROR AL ACTUALIZAR CHECK", "Fecha de checkout anterior a la fecha de checkin");
+                    }
                 }
                 await this.repository.UpdateCheck(check);
                 return ContentResponse.createResponse(true, "CHECK ACTUALIZADO CORRECTAMENTE", "SUCCESS");

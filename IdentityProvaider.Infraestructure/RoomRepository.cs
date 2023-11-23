@@ -43,9 +43,17 @@ namespace IdentityProvaider.Infraestructure
 
         }
 
+        public async Task<List<Reservation>> GetAvalibleReservationsOfRoom(RoomId room) {
+
+            List<Reservation> reservations =  db.Reservations.Where(r => r.id_room.value == room.value && r.reservation_date.value >= DateTime.Now.ToUniversalTime()).ToList<Reservation>();
+
+            return reservations;
+        }
+
+
         public async Task<List<Check>> GetChecksByNum(int numI, int numF, State state)
         {
-            var checks = db.Checks.Skip(numI).Take((numF - numI)).ToList();
+            var checks = db.Checks.Where(r => r.state.value == state.value).Skip(numI).Take((numF - numI)).ToList();
             return checks;
         }
 
@@ -56,7 +64,8 @@ namespace IdentityProvaider.Infraestructure
 
         public async Task<List<Reservation>> GetReservationsByNum(int numI, int numF, State state)
         {
-            var reservations = db.Reservations.Skip(numI).Take((numF - numI)).ToList();
+            var reservations = db.Reservations.Where(r => r.state.value == state.value && r.reservation_date.value >= DateTime.Now.ToUniversalTime()).Skip(numI).Take((numF - numI)).ToList();
+
             return reservations;
         }
 
@@ -67,7 +76,7 @@ namespace IdentityProvaider.Infraestructure
 
         public async Task<List<Room>> GetRoomsByNum(int numI, int numF, State state)
         {
-            var rooms = db.Rooms.Skip(numI).Take((numF - numI)).ToList();
+            var rooms = db.Rooms.Where(r => r.state.value == state.value).Skip(numI).Take((numF - numI)).ToList();
             return rooms;
         }
 

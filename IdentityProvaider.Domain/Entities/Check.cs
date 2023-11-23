@@ -21,6 +21,9 @@ namespace IdentityProvaider.Domain.Entities
         public Quantity num_hosts { get; set; }
         public UserIdentification titular_person_id { get; set; }
 
+        public Price? total { get; private set; }
+
+
         public Check() {
             this.checkin_date = CreationDate.create(DateTime.Now);
             state = State.create("Activo");
@@ -52,6 +55,11 @@ namespace IdentityProvaider.Domain.Entities
         {
             this.checkout_date = checkout_date;
         }
+        public void setTotal(Price total)
+        {
+            this.total = total;
+        }
+
 
         public void setUserId(UserIdentification titular_person_id)
         {
