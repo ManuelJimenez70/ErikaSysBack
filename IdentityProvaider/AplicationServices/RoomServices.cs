@@ -53,7 +53,6 @@ namespace IdentityProvaider.API.AplicationServices
 
             try
             {
-
                 RoomId id = RoomId.create(updateRoomCommand.id);
                 var room = await repository.GetRoomById(id);
                 string number = string.IsNullOrEmpty(updateRoomCommand.number) ? room.number.value : updateRoomCommand.number;
@@ -67,6 +66,9 @@ namespace IdentityProvaider.API.AplicationServices
                 {
                     room.setPrice(Price.create((int)updateRoomCommand.price_per_nigth));
                 }
+                string state = string.IsNullOrEmpty(updateRoomCommand.state) ? room.state.value : updateRoomCommand.state;
+                room.setState(State.create(state));
+
                 await this.repository.UpdateRoom(room);
                 return ContentResponse.createResponse(true, "HABITACIÓN ACTUALIZADA CORRECTAMENTE", "SUCCESS");
             }
@@ -150,7 +152,8 @@ namespace IdentityProvaider.API.AplicationServices
 
                 string personId = string.IsNullOrEmpty(updateReservationCommand.titular_person_id) ? reservation.titular_person_id.value : updateReservationCommand.titular_person_id;
                 reservation.setUserId(UserIdentification.create(personId));
-
+                string state = string.IsNullOrEmpty(updateReservationCommand.state) ? reservation.state.value : updateReservationCommand.state;
+                reservation.setState(State.create(state));
                 await this.repository.UpdateReservation(reservation);
                 return ContentResponse.createResponse(true, "RESERVACIÓN ACTUALIZADA CORRECTAMENTE", "SUCCESS");
             }
@@ -274,6 +277,8 @@ namespace IdentityProvaider.API.AplicationServices
                         return ContentResponse.createResponse(false, "ERROR AL ACTUALIZAR CHECK", "Fecha de checkout anterior a la fecha de checkin");
                     }
                 }
+                string state = string.IsNullOrEmpty(updateCheckCommand.state) ? check.state.value : updateCheckCommand.state;
+                check.setState(State.create(state));
                 await this.repository.UpdateCheck(check);
                 return ContentResponse.createResponse(true, "CHECK ACTUALIZADO CORRECTAMENTE", "SUCCESS");
 

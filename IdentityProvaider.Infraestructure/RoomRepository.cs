@@ -45,7 +45,7 @@ namespace IdentityProvaider.Infraestructure
 
         public async Task<List<Reservation>> GetAvalibleReservationsOfRoom(RoomId room) {
 
-            List<Reservation> reservations =  db.Reservations.Where(r => r.id_room.value == room.value && r.reservation_date.value >= DateTime.Now.ToUniversalTime()).ToList<Reservation>();
+            List<Reservation> reservations =  db.Reservations.Where(r => r.id_room.value == room.value && r.reservation_date.value >= DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(1)).ToList<Reservation>();
 
             return reservations;
         }
